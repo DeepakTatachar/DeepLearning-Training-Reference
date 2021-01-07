@@ -1,3 +1,8 @@
+"""
+@author: Deepak Ravikumar Tatachar, Sangamesh Kodge
+@copyright: Nanoelectronics Research Laboratory
+"""
+
 import torch
 import torchvision
 import numpy as np

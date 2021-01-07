@@ -1,3 +1,8 @@
+"""
+@author: Deepak Ravikumar Tatachar, Sangamesh Kodge
+@copyright: Nanoelectronics Research Laboratory
+"""
+
 import argparse
 import os, sys
 import torch
@@ -76,26 +81,17 @@ if args.use_seed:
         net.load_state_dict(torch.load('./seed/'+ args.dataset.lower() +'_' + args.arch + ".Seed"))
 else:
     print("Random Initialisation")
-    
-def transform_labels(labels, onehot=True):
-    if onehot:
-        labels_onehot = torch.FloatTensor(labels.shape[0], dataset.num_classes).to(device)
-        labels_onehot.zero_()
-        labels_onehot.scatter_(1, labels.unsqueeze(1), 1)
-        return labels_onehot
-    else:
-        return labels
 
 # Optimizer
-if args.optimizer.lower()=='sgd':
+if args.optimizer.lower() == 'sgd':
     optimizer = torch.optim.SGD(net.parameters(),
                                 lr=learning_rate,
                                 momentum=0.9,
                                 weight_decay=5e-4)
-elif args.optimizer.lower()=='adagrad':
+elif args.optimizer.lower() == 'adagrad':
     optimizer = torch.optim.Adagrad(net.parameters(),
                                     lr=learning_rate)
-elif args.optimizer.lower()=='adam':
+elif args.optimizer.lower() == 'adam':
     optimizer = torch.optim.Adam(net.parameters(),
                                  lr=learning_rate)
 else:
@@ -146,7 +142,7 @@ for epoch in range(start_epoch, num_epochs, 1):
         # Clears gradients of all the parameter tensors
         optimizer.zero_grad()
         out = net(data)
-        loss = criterion(out, transform_labels(labels, onehot=onehot))
+        loss = criterion(out, labels)
         loss.backward()
         optimizer.step()
 
@@ -216,10 +212,17 @@ for epoch in range(start_epoch, num_epochs, 1):
                                                                 data_loader=dataset.test_loader,
                                                                 device=device)
 
-            print(' Training set accuracy: {}/{}({:.2f}%) \n Validation set accuracy: {}/{}({:.2f}%)\n Test set: Accuracy: {}/{} ({:.2f}%)'.format(
-                train_correct,train_total, train_accuracy,
-                val_correct,val_total, val_accuracy,
-                test_correct, test_total,test_accuracy))
+            print(" Training set accuracy: {}/{}({:.2f}%) \n \ 
+                    Validation set accuracy: {}/{}({:.2f}%)\n \
+                    Test set: Accuracy: {}/{} ({:.2f}%)".format(train_correct,
+                                                                train_total,
+                                                                train_accuracy,
+                                                                val_correct,
+                                                                val_total,
+                                                                val_accuracy,
+                                                                test_correct,
+                                                                test_total,
+                                                                test_accuracy))
 
 # Test model
 # Set the model to eval mode

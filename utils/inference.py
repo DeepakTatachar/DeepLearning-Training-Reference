@@ -1,3 +1,8 @@
+"""
+@author: Deepak Ravikumar Tatachar, Sangamesh Kodge
+@copyright: Nanoelectronics Research Laboratory
+"""
+
 import torch
 
 def inference(net, data_loader,device='cpu'):

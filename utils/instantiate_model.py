@@ -1,3 +1,8 @@
+"""
+@author: @author: Deepak Ravikumar Tatachar
+@copyright: Nanoelectronics Research Laboratory
+"""
+
 import torch
 from models.resnet import *
 from models.vgg import *
@@ -6,7 +11,7 @@ import os
 
 def instantiate_model(dataset,
                       arch='resnet',
-                      suffix='', 
+                      suffix='',
                       load=False,
                       torch_weights=False,
                       device='cpu'):
@@ -59,8 +64,8 @@ def instantiate_model(dataset,
             batch_norm_linear=False
             cfg= arch[3:len_arch]
         
-        model = vgg(cfg=cfg, 
-                    batch_norm_conv=batch_norm_conv, 
+        model = vgg(cfg=cfg,
+                    batch_norm_conv=batch_norm_conv,
                     batch_norm_linear=batch_norm_linear,
                     num_classes=num_classes)
 
