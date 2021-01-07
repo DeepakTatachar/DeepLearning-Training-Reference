@@ -212,17 +212,17 @@ for epoch in range(start_epoch, num_epochs, 1):
                                                                 data_loader=dataset.test_loader,
                                                                 device=device)
 
-            print(" Training set accuracy: {}/{}({:.2f}%) \n \ 
-                    Validation set accuracy: {}/{}({:.2f}%)\n \
-                    Test set: Accuracy: {}/{} ({:.2f}%)".format(train_correct,
-                                                                train_total,
-                                                                train_accuracy,
-                                                                val_correct,
-                                                                val_total,
-                                                                val_accuracy,
-                                                                test_correct,
-                                                                test_total,
-                                                                test_accuracy))
+            print(" Training set accuracy: {}/{}({:.2f}%) \n" 
+                  "Validation set accuracy: {}/{}({:.2f}%)\n"
+                  "Test set: Accuracy: {}/{} ({:.2f}%)".format(train_correct,
+                                                               train_total,
+                                                               train_accuracy,
+                                                               val_correct,
+                                                               val_total,
+                                                               val_accuracy,
+                                                               test_correct,
+                                                               test_total,
+                                                               test_accuracy))
 
 # Test model
 # Set the model to eval mode

@@ -8,6 +8,14 @@ Requirements
 
 How to run
 ----------
+Create a folder "./pretrained/\<dataset name\>" and "./pretrained/\<dataset name\>/temp"
 ``` 
 python train.py --dataset=cifar10 --epochs=100 --loss=crossentropy --optimizer=adam --arch=resnet18
 ```
+
+Features
+--------
+* Customizable train and validation split
+* Resume training after stopping (keeps optimizer state, and best model)
+* Model naming convention
+* Saves models in "./pretrained/\<dataset name\>" and state in "./pretrained/\<dataset name\>/temp"
