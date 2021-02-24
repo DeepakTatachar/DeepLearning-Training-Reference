@@ -6,9 +6,36 @@ Requirements
 * Numpy
 * Pytorch
 
+Installation
+------------
+Use pip/conda to install numpy 
+```
+conda install numpy
+```
+or
+```
+pip install numpy
+```
+
+See https://numpy.org/install/ on how to install numpy if you are having trouble.
+
+Use https://pytorch.org/get-started/locally/ to install pytorch
+the command would look like
+```
+conda install pytorch torchvision torchaudio cudatoolkit=10.2 -c pytorch
+```
+
 How to run
 ----------
 Create a folder "./pretrained/\<dataset name\>" and "./pretrained/\<dataset name\>/temp"
+i.e. 
+```
+mkdir pretrained
+mkdir pretrained/cifar10
+mkdir pretrained/cifar10/temp
+```
+
+Run the training program
 ``` 
 python train.py --dataset=cifar10 --epochs=100 --loss=crossentropy --optimizer=adam --arch=resnet18
 ```
