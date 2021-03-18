@@ -44,7 +44,7 @@ def load_dataset(dataset='CIFAR10',
         img_dim = 28
         img_ch = 1
         num_classes = 10
-        num_worker = 0
+        num_worker = 4
         root = './data/MNIST/'
         test_transform = transforms.Compose([
                                                 transforms.ToTensor(),
@@ -84,7 +84,7 @@ def load_dataset(dataset='CIFAR10',
         img_dim = 32
         img_ch = 3
         num_classes = 10
-        num_worker = 40
+        num_worker = 4
         root = './data/CIFAR10/'
         test_transform = transforms.Compose([
                                                 transforms.ToTensor(),
