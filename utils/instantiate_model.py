@@ -6,21 +6,27 @@
 import torch
 from models.resnet import *
 from models.vgg import *
+from models.alexnet import *
+from models.lenet5 import *
 import torchvision.models as models
 import os
 
 def instantiate_model(dataset,
                       arch='resnet',
-                      suffix='',
+                      suffix='', 
                       load=False,
                       torch_weights=False,
-                      device='cpu'):
+                      device='cpu',
+                      verbose=True,
+                      path='./pretrained/'):
 
     model_name = dataset.name.lower() + "_" + arch + "_"  + suffix
     num_classes = dataset.num_classes
     model = None
 
-    if arch == 'torch_resnet18': model = models.resnet18(pretrained=torch_weights)  
+    if arch == 'alexnet': model = AlexNet(num_classes=num_classes)
+    if arch == 'lenet5': model = LeNet5(num_classes=num_classes)
+    if arch == 'torch_resnet18': model = models.resnet18(pretrained=torch_weights) 
     if arch == 'torch_resnet34': model = models.resnet34(pretrained=torch_weights)
     if arch == 'torch_resnet50': model = models.resnet50(pretrained=torch_weights)
     if arch == 'torch_resnet101': model = models.resnet101(pretrained=torch_weights)
@@ -64,8 +70,8 @@ def instantiate_model(dataset,
             batch_norm_linear=False
             cfg= arch[3:len_arch]
         
-        model = vgg(cfg=cfg,
-                    batch_norm_conv=batch_norm_conv,
+        model = vgg(cfg=cfg, 
+                    batch_norm_conv=batch_norm_conv, 
                     batch_norm_linear=batch_norm_linear,
                     num_classes=num_classes)
 
@@ -78,12 +84,16 @@ def instantiate_model(dataset,
     model = model.to(device)
 
     if load == True and torch_weights == False:
-        print(" Using Model: " + arch)
-        model_path = os.path.join('./pretrained/', dataset.name.lower(), model_name + '.ckpt')
+        model_path = os.path.join(path, dataset.name.lower(), model_name + '.ckpt')
         model.load_state_dict(torch.load(model_path, map_location='cuda:0'))
-        print(' Loaded trained model from :' + model_path)    
+        if(verbose):
+            print(" Using Model: " + arch)
+            print(' Loaded trained model from :' + model_path)    
     else:
-        model_path = os.path.join('./pretrained/', dataset.name.lower(), model_name + '.ckpt')
-        print(' Training model save at:' + model_path)
-    print('')
+        model_path = os.path.join(path, dataset.name.lower(), model_name + '.ckpt')
+        if(verbose):
+            print(' Training model save at:' + model_path)
+
+    if(verbose):
+        print('')
     return model, model_name
