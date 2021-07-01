@@ -8,11 +8,8 @@ import multiprocessing
 
 def main():
     import argparse
-    import os, sys
     import torch
-    import torchvision
     import torch.nn as nn
-    from torchvision.transforms import transforms
     from utils.str2bool import str2bool
     from utils.inference import inference
     from utils.load_dataset import load_dataset
@@ -47,7 +44,7 @@ def main():
     parser.add_argument('--arch',                   default='resnet18',     type=str,       help='Network architecture')
 
     # Summary Writer Tensorboard
-    parser.add_argument('--comment',                default="",              type=str,       help='Comment for tensorboard')
+    parser.add_argument('--comment',                default="",             type=str,       help='Comment for tensorboard')
 
     global args
     args = parser.parse_args()
@@ -64,14 +61,14 @@ def main():
     # Use the following transform for training and testing
     print('\n')
     dataset = load_dataset(dataset=args.dataset,
-                        train_batch_size=args.train_batch_size,
-                        test_batch_size=args.test_batch_size,
-                        val_split=args.val_split,
-                        augment=args.augment,
-                        padding_crop=args.padding_crop,
-                        shuffle=args.shuffle,
-                        random_seed=args.random_seed,
-                        device=device)
+                           train_batch_size=args.train_batch_size,
+                           test_batch_size=args.test_batch_size,
+                           val_split=args.val_split,
+                           augment=args.augment,
+                           padding_crop=args.padding_crop,
+                           shuffle=args.shuffle,
+                           random_seed=args.random_seed,
+                           device=device)
 
     # Instantiate model 
     net, model_name = instantiate_model(dataset=dataset,
@@ -102,17 +99,15 @@ def main():
                                         lr=learning_rate)
     elif args.optimizer.lower() == 'adam':
         optimizer = torch.optim.Adam(net.parameters(),
-                                    lr=learning_rate)
+                                     lr=learning_rate)
     else:
         raise ValueError ("Unsupported Optimizer")
 
     # Loss
     if args.loss.lower() == 'crossentropy':
         criterion = torch.nn.CrossEntropyLoss()
-        onehot = False
     elif args.loss.lower() == 'mse':
         criterion=torch.nn.MSELoss()
-        onehot = True
     else:
         raise ValueError ("Unsupported loss function")
 
@@ -134,8 +129,8 @@ def main():
 
     # Learning rate scheduler
     scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer,
-                                                    milestones=[int(0.6*args.epochs), int(0.8*args.epochs)],
-                                                    gamma=0.1)
+                                                     milestones=[int(0.6*args.epochs), int(0.8*args.epochs)],
+                                                     gamma=0.1)
 
     writer = SummaryWriter(comment=args.comment)
 
@@ -166,17 +161,17 @@ def main():
                 trainset_len = (1 - args.val_split) * len(dataset.train_loader.dataset)
                 curr_acc = 100. * train_total / trainset_len
                 print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(epoch,
-                                                                            train_total,
-                                                                            trainset_len,
-                                                                            curr_acc,
-                                                                            losses.avg))
+                                                                               train_total,
+                                                                               trainset_len,
+                                                                               curr_acc,
+                                                                               losses.avg))
 
         train_accuracy = float(train_correct) * 100.0 / float(train_total)
         print('Train Epoch: {} Accuracy : {}/{} [ {:.2f}%)]\tLoss: {:.6f}'.format(epoch,
-                                                                                train_correct,
-                                                                                train_total,
-                                                                                train_accuracy,
-                                                                                losses.avg))
+                                                                                  train_correct,
+                                                                                  train_total,
+                                                                                  train_accuracy,
+                                                                                  losses.avg))
 
         writer.add_scalar('Loss/train', losses.avg, epoch)
         writer.add_scalar('Accuracy/train', train_accuracy, epoch)
@@ -186,9 +181,9 @@ def main():
         
         if args.val_split > 0.0: 
             val_correct, val_total, val_accuracy, val_loss = inference(net=net,
-                                                                    data_loader=dataset.val_loader,
-                                                                    device=device,
-                                                                    loss=criterion)
+                                                                       data_loader=dataset.val_loader,
+                                                                       device=device,
+                                                                       loss=criterion)
 
             writer.add_scalar('Accuracy/val', val_accuracy, epoch)
             writer.add_scalar('Loss/val', val_loss, epoch)
@@ -196,7 +191,6 @@ def main():
             if val_accuracy >= best_val_accuracy:
                 best_val_accuracy = val_accuracy 
                 best_val_loss = best_val_loss
-                max_epoch = epoch + 1 
                 save_ckpt = True
         else: 
             val_accuracy= float('inf')
@@ -234,8 +228,8 @@ def main():
                                                                     device=device)
 
                 print(" Training set accuracy: {}/{}({:.2f}%) \n" 
-                    " Validation set accuracy: {}/{}({:.2f}%)\n"
-                    " Test set: Accuracy: {}/{} ({:.2f}%)".format(train_correct,
+                      " Validation set accuracy: {}/{}({:.2f}%)\n"
+                      " Test set: Accuracy: {}/{} ({:.2f}%)".format(train_correct,
                                                                     train_total,
                                                                     train_accuracy,
                                                                     val_correct,
@@ -271,4 +265,5 @@ if __name__ == "__main__":
     if os.name == 'nt':
         # On Windows calling this function is necessary for multiprocessing
         multiprocessing.freeze_support()
-        main()
+    
+    main()
