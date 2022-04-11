@@ -8,6 +8,7 @@ from models.resnet import *
 from models.vgg import *
 from models.alexnet import *
 from models.lenet5 import *
+from models.vit import *
 import torchvision.models as models
 import os
 
@@ -18,7 +19,8 @@ def instantiate_model(dataset,
                       torch_weights=False,
                       device='cpu',
                       verbose=True,
-                      path='./pretrained/'):
+                      path='./pretrained/',
+                      model_args={}):
 
     model_name = dataset.name.lower() + "_" + arch + "_"  + suffix
     num_classes = dataset.num_classes
@@ -54,6 +56,7 @@ def instantiate_model(dataset,
     if arch == 'resnet50': model = ResNet50(num_classes=num_classes)
     if arch == 'resnet101': model = ResNet101(num_classes=num_classes)
     if arch == 'resnet152': model = ResNet152(num_classes=num_classes)
+    if arch == 'vit': model = ViT(num_classes=num_classes, ** model_args)
     if arch[0:3] == 'vgg':
         len_arch = len(arch)
         cfg=""

@@ -6,6 +6,8 @@
 import os
 import multiprocessing
 
+from requests import patch
+
 def main():
     import argparse
     import torch
@@ -41,7 +43,7 @@ def main():
     parser.add_argument('--save_seed',              default=False,          type=str2bool,  help='Save the seed')
     parser.add_argument('--use_seed',               default=False,          type=str2bool,  help='For Random initialisation')
     parser.add_argument('--suffix',                 default='',             type=str,       help='Appended to model name')
-    parser.add_argument('--arch',                   default='resnet18',     type=str,       help='Network architecture')
+    parser.add_argument('--arch',                   default='vit',          type=str,       help='Network architecture')
 
     # Summary Writer Tensorboard
     parser.add_argument('--comment',                default="",             type=str,       help='Comment for tensorboard')
@@ -70,13 +72,24 @@ def main():
                            random_seed=args.random_seed,
                            device=device)
 
+    model_args = {}
+
+    if 'vit' in args.arch.lower():
+        model_args['image_size'] = dataset.img_dim
+        model_args['patch_size'] = 16
+        model_args['dim'] = 64
+        model_args['depth'] = 6 # Number of layers in the network
+        model_args['heads'] = 3 # Number of heads in the network
+        model_args['mlp_dim'] = 768
+
     # Instantiate model 
     net, model_name = instantiate_model(dataset=dataset,
                                         arch=args.arch,
                                         suffix=args.suffix,
                                         load=args.resume,
                                         torch_weights=False,
-                                        device=device)
+                                        device=device,
+                                        model_args=model_args)
 
     if args.use_seed:  
         if args.save_seed:
