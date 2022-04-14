@@ -11,6 +11,7 @@ from torch.utils.data.sampler import SubsetRandomSampler
 from torchvision.transforms.transforms import Resize
 from utils.tinyimagenet import TinyImageNet
 from utils.noise import UniformNoise, GaussianNoise
+import os
 
 class Dict_To_Obj:
     def __init__(self, **kwargs):
@@ -449,6 +450,38 @@ def load_dataset(dataset='CIFAR10',
 
         testset = torchvision.datasets.ImageFolder(root=datapath + 'val',
                                                    transform=test_transform)
+    elif dataset.lower() == 'coco_cap':
+        if(mean == None):
+            mean = [0, 0, 0]
+        if(std == None):
+            std = [1, 1, 1]
+
+        img_dim = 256
+        img_ch = 3
+        num_classes = 1000
+        num_worker = 8
+        datapath ='C:\\Users\\dravikum\\Documents\\Datasets\\COCO\\'
+        #datapath = 'Path for image net goes here' # Set path here
+                
+        train_transform, val_transform, test_transform = get_transform(test_transform,
+                                                                       train_transform,
+                                                                       val_transform,
+                                                                       mean,
+                                                                       std,
+                                                                       augment,
+                                                                       img_dim,
+                                                                       padding_crop)        
+
+        trainset = torchvision.datasets.CocoCaptions(root=os.path.join(datapath,'train2014'),
+                                                     annFile=os.path.join(datapath, 'annotations', 'captions_train2014.json'),
+                                                     transform=train_transform)
+
+        valset = torchvision.datasets.CocoCaptions(root=os.path.join(datapath,'val2014'),
+                                                   annFile=os.path.join(datapath, 'annotations', 'captions_val2014.json'),
+                                                   transform=val_transform)
+
+        testset = None
+
     else:
         # Right way to handle exception in python 
         # see https://stackoverflow.com/questions/2052390/manually-raising-throwing-an-exception-in-python

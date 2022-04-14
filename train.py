@@ -76,11 +76,17 @@ def main():
 
     if 'vit' in args.arch.lower():
         model_args['image_size'] = dataset.img_dim
-        model_args['patch_size'] = 16
+        model_args['patch_size'] = 2
         model_args['dim'] = 64
         model_args['depth'] = 6 # Number of layers in the network
-        model_args['heads'] = 3 # Number of heads in the network
-        model_args['mlp_dim'] = 768
+        model_args['heads'] = 8 # Number of heads in the network
+        model_args['mlp_dim'] = 512
+
+    suffix = ''
+    for _, m_arg in model_args.items():
+        suffix += str(m_arg) + '_'
+
+    args.suffix = suffix + args.suffix
 
     # Instantiate model 
     net, model_name = instantiate_model(dataset=dataset,
